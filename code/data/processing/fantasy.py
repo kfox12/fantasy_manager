@@ -34,9 +34,10 @@ def extract_season(season, weeks=range(1, 19)):
 
 def main():
     fantasy_2021 = extract_season(2021)
-
-    print(f"FANTASY DATABASE SIZE == {len(fantasy_2021)}")
-    print(fantasy_2021[:5])
+    tee_2021 = fantasy_2021[fantasy_2021["player_name"] == "Tee Higgins"]
+    print(tee_2021)
+    # print(f"FANTASY DATABASE SIZE == {len(fantasy_2021)}")
+    # print(fantasy_2021[:5])
 
 
 if __name__ == "__main__":
