@@ -11,7 +11,7 @@ def compile_sources():
     BASE_DIR = Path(__file__).resolve().parents[2]
     raw_dir = BASE_DIR / "data" / "raw"
     players = player_stats.filter_receivers(
-        player_stats.extract_data(raw_dir / "stats_player_wwek_2021.csv")
+        player_stats.extract_data(raw_dir / "stats_player_week_2021.csv")
     )
 
     games = schedule.get_year(
