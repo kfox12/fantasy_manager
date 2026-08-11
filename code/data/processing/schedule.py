@@ -1,54 +1,37 @@
 #!/opt/anaconda3/bin/python
-import csv
-import numpy as np
+import pandas as pd
 from pathlib import Path
 
 
 def extract_data(file_path):
-    with open(file_path, "r", encoding="utf-8") as file:
-            reader = csv.DictReader(file)
-            games = []
-            for row in reader:
-                # print(row)
-                total_line = row["total_line"].strip()
-                if total_line:
-                    total_line_value = float(total_line)
-                else:
-                    total_line_value = np.nan
-                games.append(
-                    (
-                        row["home_team"],
-                        row["away_team"], 
-                        row["season"],
-                        row["week"],
-                        row["gameday"],
-                        row["location"], 
-                        total_line_value,
-                        #row["wind"],
-                        #row["temp"]
-                    )
-                )
-    
-    games_dtype = np.dtype(
-            [("home_team", "U3"),  
-            ("away_team", "U3"), 
-            ("season", np.int16),
-            ("week", np.int16), 
-            ("gameday", "U20"),  
-            ("location", "U5"),
-            ("total_line", np.float64)]
-            #("wind", np.int16),
-            #("temp", np.int16)]
-            
+    columns = ["home_team", "away_team", "season", "week", "gameday", "location", "total_line"]
+
+    games_table = pd.read_csv(
+        file_path,
+        usecols=columns,
+        dtype={
+            "home_team": "string",
+            "away_team": "string",
+            "season": "int16",
+            "week": "int16",
+            "gameday": "string",
+            "location": "string",
+            "total_line": "float64",
+        },
     )
-    
-    games_table = np.array(games, dtype = games_dtype)
-    
+
     return games_table
 
-def get_year(array, year: int):
-    return array[array["season"] == year]
-     
+def get_year(table, year: int):
+    return table[table["season"] == year]
+
+def by_team(games_table):
+    home = games_table.rename(columns={"home_team": "team", "away_team": "opponent_team"})
+    home["is_home"] = True
+    away = games_table.rename(columns={"away_team": "team", "home_team": "opponent_team"})
+    away["is_home"] = False
+
+    return pd.concat([home, away], ignore_index=True)
 
 def main():
     BASE_DIR = Path(__file__).resolve().parents[2]

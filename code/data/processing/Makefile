@@ -8,3 +8,9 @@ schedule: schedule.py
 
 weather: weather.py
 	./weather.py
+
+fantasy: fantasy.py
+	./fantasy.py
+
+merged: merged_stats.py
+	./merged_stats.py
