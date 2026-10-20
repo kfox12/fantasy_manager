@@ -11,7 +11,7 @@ def filter_player(player_table, player_name):
 
 def player_prev_weeks(player_table, player_name, curr_week, weeks_prior):
     player_filtered = filter_player(player_table, player_name)
-    if curr_week - weeks_prior < 2: #User wants all weeks leading up to curr_week
+    if curr_week - weeks_prior <= 1: #User wants all weeks leading up to curr_week
         return player_filtered[player_filtered["week"] < curr_week]
     else: # User wants a limited set of weeks
         return player_filtered[
@@ -28,6 +28,7 @@ def extract_data(file_path):
         "season": "season",
         "week": "week",
         "opponent_team": "opponent_team",
+        "targets": "targets",
         "receptions": "receptions",
         "receiving_yards": "receiving_yards",
     }
@@ -42,12 +43,13 @@ def extract_data(file_path):
             "season": "int16",
             "week": "int16",
             "opponent_team": "string",
+            "targets": "int16",
             "receptions": "int16",
             "receiving_yards": "int16",
         },
     ).rename(columns=columns)
 
-    return player_table
+    return player_table[player_table["week"] <= 18] # Exclude the postseason
 
 def main():
     #features = "weather", "targets_per_game", "home_away", "game_total", \
